@@ -1,4 +1,3 @@
-version: '3'
 services:
   domserver:
     image: domjudge/domserver:latest
@@ -37,8 +36,8 @@ services:
     ports:
       - 13306:3306
     volumes: 
-      - "/var/lib/mysql/data:${MARIADB_DATA_DIR}"
-      - "/var/lib/mysql/logs:${MARIADB_LOG_DIR}"
+      - "${MARIADB_DATA_DIR}:/var/lib/mysql/data"
+      - "${MARIADB_LOG_DIR}:/var/lib/mysql/logs"
       - /var/docker/mariadb/conf:/etc/mysql
     environment:
       MYSQL_USER: domjudge
