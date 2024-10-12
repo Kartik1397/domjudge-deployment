@@ -1,0 +1,47 @@
+version: '3'
+services:
+  domserver:
+    image: domjudge/domserver:latest
+    container_name: domserver
+    restart: always
+    ports:
+      - 12345:80
+    depends_on:
+      - mariadb
+    environment:
+      MYSQL_HOST: mariadb
+      MYSQL_USER: domjudge
+      MYSQL_DATABASE: domjudge
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      CONTAINER_TIMEZONE: Asia/Kolkata
+
+  judgehost:
+    image: domjudge/judgehost
+    container_name: judgehost
+    restart: always
+    privileged: true
+    hostname: judgedaemon
+    depends_on:
+      - domserver
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+    environment:
+      DAEMON_ID: 0
+      JUDGEDAEMON_PASSWORD: "${JUDGEDAEMON_PASSWORD}"
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    restart: always
+    ports:
+      - 13306:3306
+    volumes: 
+      - "/var/lib/mysql/data:${MARIADB_DATA_DIR}"
+      - "/var/lib/mysql/logs:${MARIADB_LOG_DIR}"
+      - /var/docker/mariadb/conf:/etc/mysql
+    environment:
+      MYSQL_USER: domjudge
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_DATABASE: domjudge
