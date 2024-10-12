@@ -12,5 +12,10 @@ To get admin user password
 docker exec -it domserver cat /opt/domjudge/domserver/etc/initial_admin_password.secret
 ```
 
+To start judgehost
+- Go to http://localhost:12345/jury/users
+- Edit judgehost user
+- Set password to `djpw@12345` and Save
+
 For more information checkout:
 https://hub.docker.com/r/domjudge/domserver/
